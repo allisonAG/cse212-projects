@@ -22,7 +22,21 @@ public static class SetsAndMaps
     public static string[] FindPairs(string[] words)
     {
         // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        var set = new HashSet<string>();
+        var pairs = new HashSet<string>();
+
+        foreach (var word in words)
+        {
+            if (word[0] == word[1])
+                continue;
+            var reversed = $"{word[1]}{word[0]}";
+            if (set.Contains(reversed))
+            {
+                pairs.Add($"{word} & {reversed}");
+            }
+            set.Add(word);
+        }
+        return pairs.ToArray();
     }
 
     /// <summary>
@@ -43,6 +57,15 @@ public static class SetsAndMaps
         {
             var fields = line.Split(",");
             // TODO Problem 2 - ADD YOUR CODE HERE
+            var degree = fields[3];
+            if (degrees.ContainsKey(degree))
+            {
+                degrees[degree]++;
+            }
+            else
+            {
+                degrees[degree] = 1;
+            }
         }
 
         return degrees;
@@ -67,7 +90,42 @@ public static class SetsAndMaps
     public static bool IsAnagram(string word1, string word2)
     {
         // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        var anagrams = new Dictionary<string, int>();
+
+        var word1NoSpaces = word1.Replace(" ", "");
+        var word2NoSpaces = word2.Replace(" ", "");
+        
+        if (word1NoSpaces.Length != word2NoSpaces.Length)
+            return false;
+
+        foreach (var letter in word1NoSpaces.ToLower()){
+        
+            if (anagrams.ContainsKey(letter.ToString()))
+            {
+                anagrams[letter.ToString()]++;
+            }
+            else
+            {
+                anagrams[letter.ToString()] = 1;
+            }
+        }
+
+        foreach (var letter in word2NoSpaces.ToLower()) {
+            if (letter == ' ')
+                continue;
+
+            if (anagrams.ContainsKey(letter.ToString()))
+            {
+                anagrams[letter.ToString()]--;
+                if (anagrams[letter.ToString()] < 0)
+                    return false;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     /// <summary>
